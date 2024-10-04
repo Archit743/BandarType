@@ -5,11 +5,17 @@ import '../Styles/MainPage.css';
 
 const MainPage = () => {
 
+  
+  const [generatedText, setGeneratedText] = useState('');
+  const [userInput, setUserInput] = useState('');
+  const [correctChars, setCorrectChars] = useState(0);
+  const [loading, setLoading] = useState(false); 
+  
   const getText = async (textLength) => {
     const textData = {
       textLength: textLength
     };
-
+    
     try {
       const response = await fetch('https://bandartype-backend.onrender.com/api/text/text', {
         method: 'POST',
@@ -34,17 +40,14 @@ const MainPage = () => {
       alert('An unexpected error occurred');
     }
   };
-
-  const [generatedText, setGeneratedText] = useState('');
-  const [userInput, setUserInput] = useState('');
-  const [correctChars, setCorrectChars] = useState(0);
-  const [loading, setLoading] = useState(false); // Loading state
-
+  useEffect(() => {
+    getText(15);
+  }, []);
   // Compare user input with generated text
   const handleTyping = (e) => {
     const input = e.target.value;
     setUserInput(input);
-
+    
     let correctCount = 0;
     for (let i = 0; i < input.length; i++) {
       if (input[i] === generatedText[i]) {
@@ -57,7 +60,7 @@ const MainPage = () => {
   return (
     <div className="main-container">
       <header className="main-header">
-        <h1>monkeytype</h1>
+        <h1>bandartype</h1>
         <nav className="nav-links-left">
           <Link to="#">KeyBoard</Link>
           <Link to="#">LeaderBoard</Link>

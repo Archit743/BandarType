@@ -11,7 +11,7 @@ const EntryPage = () => {
     <>
     <div className='container'>
       <div className='header'>   
-        <div>Monkey Type</div>
+        <div>bandar type</div>
       </div>
       <section className='body'>   
         <button className='login' onClick={() => setOpen(true)}>
