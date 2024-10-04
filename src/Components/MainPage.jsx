@@ -2,36 +2,43 @@ import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import '../Styles/MainPage.css';
 
-const fetchTextFromGemini = async (wordCount) => {
-  const response = await fetch(`#=${wordCount}`);
-  const data = await response.json();
-  return data.text;
-};
 
 const MainPage = () => {
 
-  const [wordCount, setWordCount] = useState(15);
+  const getText = async (textLength) => {
+    const textData = {
+      textLength: textLength
+    };
+
+    try {
+      const response = await fetch('https://bandartype-backend.onrender.com/api/text/text', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'token': localStorage.getItem('jwt')
+        },
+        body: JSON.stringify(textData),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        console.error('Failed to fetch text', data);
+        alert('text fetching failure' + (data.message || 'Unknown error'));
+      } else {
+        const data = await response.json();
+        setGeneratedText(data.text);
+
+      }
+    } catch (error) {
+      console.error('Fetch Error: ', error);
+      alert('An unexpected error occurred');
+    }
+  };
+
   const [generatedText, setGeneratedText] = useState('');
   const [userInput, setUserInput] = useState('');
   const [correctChars, setCorrectChars] = useState(0);
   const [loading, setLoading] = useState(false); // Loading state
-
-  useEffect(() => {
-    const getText = async () => {
-      setLoading(true); // Start loading
-      try {
-        const text = await fetchTextFromGemini(wordCount);
-        setGeneratedText(text);
-        setUserInput('');
-        setCorrectChars(0);
-      } catch (error) {
-        console.error('Error fetching text:', error);
-      } finally {
-        setLoading(false); // Stop loading
-      }
-    };
-    getText();
-  }, [wordCount]);
 
   // Compare user input with generated text
   const handleTyping = (e) => {
@@ -64,35 +71,35 @@ const MainPage = () => {
       </header>
       <main className="main-body">
         <div className='Modes'>
-            <ul>
-                <li>punctuation</li>
-                <li>numbers</li>
-                <li>|</li>
-                <li>time</li>
-                <li>words</li>
-                <li>quote</li>
-                <li>zen</li>
-                <li>custom</li>
-                <li>|</li>
-                <li onClick={() => handleModeChange(15)}>15</li>
-                <li onClick={() => handleModeChange(30)}>30</li>
-                <li onClick={() => handleModeChange(60)}>60</li>
-                <li onClick={() => handleModeChange(120)}>120</li>
-            </ul>
+          <ul>
+            <li>punctuation</li>
+            <li>numbers</li>
+            <li>|</li>
+            <li>time</li>
+            <li>words</li>
+            <li>quote</li>
+            <li>zen</li>
+            <li>custom</li>
+            <li>|</li>
+            <li onClick={() => getText(15)}>15</li>
+            <li onClick={() => getText(30)}>30</li>
+            <li onClick={() => getText(60)}>60</li>
+            <li onClick={() => getText(120)}>120</li>
+          </ul>
         </div>
         <section className='Typing-section'>
-            <div className='text-area'>
-              {loading ? <p>Loading...</p> : <p>{generatedText}</p>} {/* Display loading indicator */}
-            </div>
-            <div className='type-area'>
-                <textarea type="text" placeholder='Start Typing' value={userInput} onChange={handleTyping} id="inputText" />
-            </div>
+          <div className='text-area'>
+            {loading ? <p>Loading...</p> : <p>{generatedText}</p>} {/* Display loading indicator */}
+          </div>
+          <div className='type-area'>
+            <textarea type="text" placeholder='Start Typing' value={userInput} onChange={handleTyping} id="inputText" />
+          </div>
         </section>
         {/* Feedback */}
-      <section className='feedback'>
-        <p>Correct Characters: {correctChars} / {generatedText.length}</p>
-        <p>Accuracy: {(correctChars / generatedText.length * 100).toFixed(2)}%</p>
-      </section>
+        <section className='feedback'>
+          <p>Correct Characters: {correctChars} / {generatedText.length}</p>
+          <p>Accuracy: {(correctChars / generatedText.length * 100).toFixed(2)}%</p>
+        </section>
       </main>
     </div>
   );
