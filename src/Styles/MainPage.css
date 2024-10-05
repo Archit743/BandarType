@@ -88,11 +88,26 @@
 
 }
 .text-area{
+display:flex;
+flex-direction:row;
     color: #989898;
     padding-top: 30px;
     font-family: 'Roboto Mono',monospace;
     font-size: xx-large;
     word-spacing: 10px;
+}
+.text-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.word {
+  margin-right: 13px; /* Adjust space between words */
+  display: flex;
+}
+
+.char {
+  padding: 1px; /* Adjust space between characters */
 }
 .type-area {
     width: 100%;
