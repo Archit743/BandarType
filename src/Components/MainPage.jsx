@@ -5,17 +5,18 @@ import '../Styles/MainPage.css';
 
 const MainPage = () => {
 
-  
+
   const [generatedText, setGeneratedText] = useState('');
   const [userInput, setUserInput] = useState('');
   const [correctChars, setCorrectChars] = useState(0);
-  const [loading, setLoading] = useState(false); 
-  
+  const [loading, setLoading] = useState(false);
+
   const getText = async (textLength) => {
+    setLoading(true)
     const textData = {
       textLength: textLength
     };
-    
+
     try {
       const response = await fetch('https://bandartype-backend.onrender.com/api/text/text', {
         method: 'POST',
@@ -39,6 +40,7 @@ const MainPage = () => {
       console.error('Fetch Error: ', error);
       alert('An unexpected error occurred');
     }
+    setLoading(false)
   };
   useEffect(() => {
     getText(15);
@@ -47,7 +49,7 @@ const MainPage = () => {
   const handleTyping = (e) => {
     const input = e.target.value;
     setUserInput(input);
-    
+
     let correctCount = 0;
     for (let i = 0; i < input.length; i++) {
       if (input[i] === generatedText[i]) {
@@ -56,6 +58,22 @@ const MainPage = () => {
     }
     setCorrectChars(correctCount);
   };
+
+  const renderText = (text) => {
+    return (
+      <div className='text-wrapper'>
+        {text.split(' ').map((word, wordIndex) => (
+          <div className='word' key={wordIndex}>
+            {word.split('').map((char, charIndex) => (
+              <span className='char' key={charIndex}>
+                {char}
+              </span>
+            ))}</div>
+        ))}
+      </div>
+    )
+
+  }
 
   return (
     <div className="main-container">
@@ -92,7 +110,7 @@ const MainPage = () => {
         </div>
         <section className='Typing-section'>
           <div className='text-area'>
-            {loading ? <p>Loading...</p> : <p>{generatedText}</p>} {/* Display loading indicator */}
+            {loading ? <p>Loading...</p> : <p>{renderText(generatedText)}</p>} {/* Display loading indicator */}
           </div>
           <div className='type-area'>
             <textarea type="text" placeholder='Start Typing' value={userInput} onChange={handleTyping} id="inputText" />
