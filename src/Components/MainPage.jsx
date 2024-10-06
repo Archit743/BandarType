@@ -5,11 +5,11 @@ import '../Styles/MainPage.css';
 
 const MainPage = () => {
 
-
   const [generatedText, setGeneratedText] = useState('');
   const [userInput, setUserInput] = useState('');
   const [correctChars, setCorrectChars] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [textLength, setTextLength] = useState(15)
 
   const getText = async (textLength) => {
     setLoading(true)
@@ -43,8 +43,8 @@ const MainPage = () => {
     setLoading(false)
   };
   useEffect(() => {
-    getText(15);
-  }, []);
+    getText(textLength);
+  }, [textLength]);
   // Compare user input with generated text
   const handleTyping = (e) => {
     const input = e.target.value;
@@ -102,10 +102,10 @@ const MainPage = () => {
             <li>zen</li>
             <li>custom</li>
             <li>|</li>
-            <li onClick={() => getText(15)}>15</li>
-            <li onClick={() => getText(30)}>30</li>
-            <li onClick={() => getText(60)}>60</li>
-            <li onClick={() => getText(120)}>120</li>
+            <li onClick={() => setTextLength(15)}>15</li>
+            <li onClick={() => setTextLength(30)}>30</li>
+            <li onClick={() => setTextLength(60)}>60</li>
+            <li onClick={() => setTextLength(120)}>120</li>
           </ul>
         </div>
         <section className='Typing-section'>
