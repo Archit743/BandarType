@@ -1,21 +1,18 @@
-import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import '../Styles/MainPage.css';
 
-
 const MainPage = () => {
-
   const [generatedText, setGeneratedText] = useState('');
   const [userInput, setUserInput] = useState('');
   const [correctChars, setCorrectChars] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [textLength, setTextLength] = useState(15)
+  const [textLength, setTextLength] = useState(15);
 
+  // Fetch text from backend
   const getText = async (textLength) => {
-    setLoading(true)
-    const textData = {
-      textLength: textLength
-    };
+    setLoading(true);
+    const textData = { textLength };
 
     try {
       const response = await fetch('https://bandartype-backend.onrender.com/api/text/text', {
@@ -27,56 +24,69 @@ const MainPage = () => {
         body: JSON.stringify(textData),
       });
 
-      if (!response.ok) {
+      if (response.ok) {
         const data = await response.json();
-        console.error('Failed to fetch text', data);
-        alert('text fetching failure' + (data.message || 'Unknown error'));
-      } else {
-        const data = await response.json();
+        data.text = data.text.replace(/\n/g, '').trim().replace(/\.$/, '');
+        console.log(data.text)
         setGeneratedText(data.text);
-
+      } else {
+        alert('Failed to fetch text');
       }
     } catch (error) {
-      console.error('Fetch Error: ', error);
       alert('An unexpected error occurred');
     }
-    setLoading(false)
+    setLoading(false);
   };
+
   useEffect(() => {
     getText(textLength);
   }, [textLength]);
-  // Compare user input with generated text
-  const handleTyping = (e) => {
-    const input = e.target.value;
-    setUserInput(input);
 
+  const handleTyping = (e) => {
+    const input = e.key;
+
+    // Handle backspace
+    if (input === 'Backspace') {
+      setUserInput((prev) => prev.slice(0, -1));
+      return;
+    }
+
+    // Ignore other control keys
+    if (input.length > 1) return;
+
+    // Append new character to input
+    setUserInput((prev) => prev + input);
+
+    // Calculate correct characters
     let correctCount = 0;
-    for (let i = 0; i < input.length; i++) {
-      if (input[i] === generatedText[i]) {
+    for (let i = 0; i < userInput.length + 1; i++) {
+      if (generatedText[i] === userInput[i]) {
         correctCount++;
       }
     }
     setCorrectChars(correctCount);
   };
 
-  const renderText = (text) => {
-    return (
-      <div className='text-wrapper'>
-        {text.split(' ').map((word, wordIndex) => (
-          <div className='word' key={wordIndex}>
-            {word.split('').map((char, charIndex) => (
-              <span className='char' key={charIndex}>
-                {char}
-              </span>
-            ))}</div>
-        ))}
-      </div>
-    )
+  const renderText = () => {
+    return generatedText.split('').map((char, index) => {
+      let className = '';
 
-  }
+      if (index < userInput.length) {
+        className = userInput[index] === char ? 'correct' : 'incorrect';
+      } else if (index === userInput.length) {
+        className = 'current';
+      }
+
+      return (
+        <span key={index} className={className}>
+          {char}
+        </span>
+      );
+    });
+  };
 
   return (
-    <div className="main-container">
+    <div className="main-container" onKeyDown={handleTyping} tabIndex={0}>
       <header className="main-header">
         <h1>bandartype</h1>
         <nav className="nav-links-left">
@@ -91,7 +101,7 @@ const MainPage = () => {
         </nav>
       </header>
       <main className="main-body">
-        <div className='Modes'>
+        <div className="Modes">
           <ul>
             <li>punctuation</li>
             <li>numbers</li>
@@ -108,16 +118,15 @@ const MainPage = () => {
             <li onClick={() => setTextLength(120)}>120</li>
           </ul>
         </div>
-        <section className='Typing-section'>
-          <div className='text-area'>
-            {loading ? <p>Loading...</p> : <p>{renderText(generatedText)}</p>} {/* Display loading indicator */}
-          </div>
-          <div className='type-area'>
-            <textarea type="text" placeholder='Start Typing' value={userInput} onChange={handleTyping} id="inputText" />
+
+        <section className="Typing-section">
+          <div className="text-area">
+            {loading ? <p>Loading...</p> : <div className="generated-text">{renderText()}</div>}
           </div>
         </section>
+
         {/* Feedback */}
-        <section className='feedback'>
+        <section className="feedback">
           <p>Correct Characters: {correctChars} / {generatedText.length}</p>
           <p>Accuracy: {(correctChars / generatedText.length * 100).toFixed(2)}%</p>
         </section>
