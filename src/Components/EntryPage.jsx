@@ -7,7 +7,7 @@ import '../Styles/EntryPage.css';
 const EntryPage = () => {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
-  return (
+  return ( 
     <>
     <div className='container'>
       <div className='header'>   
@@ -18,7 +18,7 @@ const EntryPage = () => {
           Login
         </button>
         <button className='register'  onClick={() => setOpen2(true)}>
-          Register
+          Register 
         </button>
       </section>
     </div>
