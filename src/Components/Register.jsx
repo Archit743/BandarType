@@ -13,7 +13,7 @@ const Register_user = async (setOpen,setOpen2) => {
     };
   
     try {
-        const response = await fetch('https://bandartype-backend.onrender.com/api/user/signup', {
+        const response = await fetch('https://bandartype-backend-1ln2.onrender.com/api/user/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

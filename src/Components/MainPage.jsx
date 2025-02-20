@@ -27,7 +27,7 @@ const MainPage = () => {
     const textData = { textLength: length, mode: mode };
 
     try {
-      const response = await fetch('https://bandartype-backend.onrender.com/api/text/text', {
+      const response = await fetch('https://bandartype-backend-1ln2.onrender.com/api/text/text', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
