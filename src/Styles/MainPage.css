@@ -381,6 +381,7 @@
 .settings-modal {
   width: 500px;
   max-width: 90vw;
+  height: 95vh;
   background-color: #252525;
   border-radius: 12px;
   overflow: hidden;
@@ -396,7 +397,7 @@
 
 .settings-header {
   padding: 20px 25px;
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  background: linear-gradient(135deg,rgb(133, 133, 133),rgb(49, 54, 63));
   color: white;
   display: flex;
   justify-content: space-between;
@@ -460,7 +461,7 @@
   left: 0;
   width: 40px;
   height: 2px;
-  background: linear-gradient(90deg, #1e3c72, transparent);
+  background: linear-gradient(90deg,rgb(79, 93, 120), transparent);
 }
 
 .theme-options {
@@ -470,6 +471,7 @@
 }
 
 .theme-btn {
+  width: fit-content;
   padding: 10px 18px;
   background-color: #333;
   border: 1px solid #444;
@@ -499,9 +501,9 @@
 }
 
 .theme-btn.active {
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  background: linear-gradient(135deg,rgb(146, 149, 155),rgb(64, 77, 99));
   color: white;
-  border-color: #1e3c72;
+  border-color:rgb(136, 163, 214);
   box-shadow: 0 2px 8px rgba(42, 82, 152, 0.3);
 }
 
@@ -521,7 +523,7 @@
   flex: 1;
   height: 8px;
   -webkit-appearance: none;
-  background: linear-gradient(to right, #1e3c72, #2a5298);
+  background: linear-gradient(to right,rgb(141, 144, 149),rgb(60, 71, 91));
   border-radius: 4px;
   outline: none;
 }
@@ -592,7 +594,7 @@
 }
 
 .toggle-switch input:checked + .toggle-slider {
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  background: linear-gradient(135deg,rgb(135, 139, 146),rgb(63, 80, 109));
 }
 
 .toggle-switch input:checked + .toggle-slider:before {
@@ -630,7 +632,7 @@
 }
 
 .save-btn {
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  background: linear-gradient(135deg,rgb(73, 75, 79),rgb(38, 45, 56));
   color: white;
   box-shadow: 0 2px 5px rgba(30, 60, 114, 0.3);
 }

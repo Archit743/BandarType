@@ -27,7 +27,7 @@ const Verify_Credentials = async (navigate) => {
           const data = await response.json();
           console.log('Login Successful: ', data);
           localStorage.setItem('jwt', data.token);
-          alert('Login Successful');
+        //   alert('Login Successful');
           navigate('/main');
       }
   } catch (error) {

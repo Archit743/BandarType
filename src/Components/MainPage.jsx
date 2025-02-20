@@ -38,17 +38,37 @@ const MainPage = () => {
 
       if (response.ok) {
         const data = await response.json();
-        // Process text based on mode
-        let processedText = data.text.replace(/\n/g, '').trim().replace(/\.$/, '');
         
+        // Remove newlines and extra spaces while preserving punctuation
+        let processedText = data.text.replace(/\n/g, ' ').trim();
+      
         if (mode === 'punctuation') {
-          // Ensure text has punctuation
-          processedText = processedText.replace(/([.!?])\s+/g, "$1 ");
+          // Ensure existing punctuation is properly formatted
+          processedText = processedText.replace(/([.!?])\s+/g, "$1 "); 
+      
+          // Add missing punctuation if needed
+          if (!/[.!?]$/.test(processedText)) {
+            processedText += "."; // Ensure text ends with punctuation
+          }
+      
+          // If the text lacks punctuation, insert it at random intervals
+          let words = processedText.split(/\s+/);
+          let punctuationMarks = ['.', '!', '?'];
+          
+          for (let i = 6; i < words.length; i += Math.floor(Math.random() * 5) + 5) {
+            if (!/[.!?]$/.test(words[i])) { 
+              words[i] += punctuationMarks[Math.floor(Math.random() * punctuationMarks.length)];
+            }
+          }
+          
+          processedText = words.join(' ');
+      
         } else if (mode === 'numbers') {
-          // Add numbers to the text
-          processedText = processedText.replace(/\b(\w+)\b/g, (match, p1, offset) => {
-            return offset % 5 === 0 ? `${Math.floor(Math.random() * 100)} ${p1}` : p1;
-          });
+          // Add numbers at every 5th word
+          let words = processedText.split(/\s+/);
+          processedText = words.map((word, index) => 
+            index % 5 === 0 ? `${Math.floor(Math.random() * 100)} ${word}` : word
+          ).join(' ');
         }
         
         setGeneratedText(processedText);
@@ -442,7 +462,7 @@ const restartTyping = () => {
           </div>
           <div className="settings-footer">
             <button className="settings-btn cancel-btn" onClick={() => setShowSettings(false)}>Cancel</button>
-            <button className="settings-btn save-btn">Save Changes</button>
+            <button className="settings-btn save-btn" onClick={() => setShowSettings(false)}>Save</button>
           </div>
         </div>
       </div>
